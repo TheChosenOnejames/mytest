@@ -1,0 +1,79 @@
+{
+  "id": "3645513",
+  "name": "icon-cc",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "845846",
+      "name": "投资",
+      "font_class": "touzi",
+      "unicode": "e67a",
+      "unicode_decimal": 59002
+    },
+    {
+      "icon_id": "521071",
+      "name": "核对",
+      "font_class": "7",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "1279428",
+      "name": "股票期权",
+      "font_class": "gupiaoqiquan",
+      "unicode": "e65a",
+      "unicode_decimal": 58970
+    },
+    {
+      "icon_id": "2803724",
+      "name": "期货",
+      "font_class": "qihuo",
+      "unicode": "e6a5",
+      "unicode_decimal": 59045
+    },
+    {
+      "icon_id": "5387664",
+      "name": "待办任务",
+      "font_class": "daibanrenwu",
+      "unicode": "eb29",
+      "unicode_decimal": 60201
+    },
+    {
+      "icon_id": "6503440",
+      "name": "额度授信",
+      "font_class": "edushouxin",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "7302532",
+      "name": "银行账户",
+      "font_class": "yinhangzhanghu",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "5838820",
+      "name": "统计",
+      "font_class": "tongji",
+      "unicode": "e878",
+      "unicode_decimal": 59512
+    },
+    {
+      "icon_id": "14033564",
+      "name": "盈利",
+      "font_class": "yingli",
+      "unicode": "e7aa",
+      "unicode_decimal": 59306
+    },
+    {
+      "icon_id": "18267965",
+      "name": "银行",
+      "font_class": "yinhang",
+      "unicode": "e99a",
+      "unicode_decimal": 59802
+    }
+  ]
+}
