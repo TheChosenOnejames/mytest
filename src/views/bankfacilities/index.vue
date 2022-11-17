@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-08-22 09:08:34
  * @LastEditors: shen-xu
- * @LastEditTime: 2022-09-15 15:48:28
+ * @LastEditTime: 2022-11-16 18:12:50
  * @Description: 
 -->
 <template>
@@ -1141,7 +1141,6 @@ export default {
       this.searchbank_branch_input = res.results.unique_data.bank_branch;
       this.searchcurrency_input = res.results.unique_data.currency;
       this.total = res.count;
-      console.log(res.count, "oo");
     },
     async delBankfacilities(row) {
       const confirmRusult = await this.$confirm(
@@ -1172,57 +1171,63 @@ export default {
     },
     //修改确认提交表单
     async editUserInfo() {
-      //  console.log(this.editId, "llll");
-      await this.$confirm("此操作将编辑文件, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "编辑成功!"
-          });
+      this.$refs.editFormRef.validate(async valida => {
+        if (!valida) return;
+        //  console.log(this.editId, "llll");
+        await this.$confirm("此操作将编辑文件, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消编辑"
+          .then(() => {
+            this.$message({
+              type: "success",
+              message: "编辑成功!"
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消编辑"
+            });
           });
-        });
-      const res = reqeditbankfacilities(this.editId, this.editForm);
-      if (res.status !== 200) {
-        this.$message.error("更新用户信息失败!");
-      }
-      this.$message.success("更新用户信息成功!");
-      this.editDialogVisble = false;
-      this.getbankfacilitiesList();
+        const res = reqeditbankfacilities(this.editId, this.editForm);
+        if (res.status !== 200) {
+          this.$message.error("更新用户信息失败!");
+        }
+        this.$message.success("更新用户信息成功!");
+        this.editDialogVisble = false;
+        this.getbankfacilitiesList();
+      });
     },
     async addUserInfo() {
-      await this.$confirm("此操作将添加文件, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "添加成功!"
-          });
+      this.$refs.addFormRef.validate(async valid => {
+        if (!valid) return;
+        await this.$confirm("此操作将添加文件, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消添加"
+          .then(() => {
+            this.$message({
+              type: "success",
+              message: "添加成功!"
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消添加"
+            });
           });
-        });
-      const res = await reqaddbankfacilities(this.addForm);
-      if (res.status !== 200) {
-        this.$message.error("添加用户信息失败!");
-      }
-      this.$message.success("添加用户信息成功!");
-      this.dialogFormVisible = false;
-      this.getbankfacilitiesList();
+        const res = await reqaddbankfacilities(this.addForm);
+        if (res.status !== 200) {
+          this.$message.error("添加用户信息失败!");
+        }
+        this.$message.success("添加用户信息成功!");
+        this.dialogFormVisible = false;
+        this.getbankfacilitiesList();
+      });
     },
     addClosedbankfacilities() {
       this.$refs.addFormRef.resetFields();

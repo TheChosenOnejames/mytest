@@ -1,16 +1,13 @@
 /*
  * @Date: 2022-06-08 08:55:57
  * @LastEditors: shen-xu
- * @LastEditTime: 2022-11-10 11:27:55
+ * @LastEditTime: 2022-11-17 10:43:02
  * @Description:
  */
 import Vue from "vue";
 import VueRouter from "vue-router";
-// 默认就会去 login 目录, 找index.vue(可以省略) (如果是页面大写, 需要写全)
-
 import Login from "@/views/login";
 import Layout from "@/views/layout";
-import page404 from '@/views/page404/index.vue';
 import backlog from '@/views/backlog/index.vue'
 import bank from '@/views/bank/index.vue'
 import futuresmarket from '@/views/futuresmarket/index.vue'
@@ -27,6 +24,8 @@ import adduser from '@/views/adduser/index.vue'
 import addusers from '@/views/addusers/index.vue'
 import windContractprice from '@/views/windcontractprice/index.vue'
 import regulator from '@/views/regulator/index.vue'
+import MenuList from '@/views/menuList/index.vue'
+import page404 from '@/views/page404/index.vue';
 import NProgress from 'nprogress'
 Vue.use(VueRouter);
 const routes = [
@@ -51,28 +50,30 @@ const routes = [
       { path: '/addusers', name: 'AddUsers', component: addusers, meta: { keepAlive: true }, component: () => import('@/views/addusers/index.vue') },
       { path: '/windcontractprice', name: 'WindContractprice', component: windContractprice, meta: { keepAlive: true }, component: () => import('@/views/windcontractprice/index.vue') },
       { path: '/regulator', name: 'Regulator', component: regulator, meta: { keepAlive: true }, component: () => import('@/views/regulator/index.vue') },
+      { path: '/menuList', name: 'MenuList', component: MenuList, meta: { keepAlive: true }, component: () => import('@/views/menuList/index.vue') },
+      { path: '*', name: 'Page404', component: page404, meta: { keepAlive: true }, component: () => import('@/views/page404/index.vue') },
     ]
   },
 ]
 const router = new VueRouter({
-  routes
+  routes,
 });
-NProgress.configure({ showSpinner: false })
+/* NProgress.configure({ showSpinner: false })
 //在路由跳转前用NProgress.start()标记下进度条开始
 router.beforeEach((to, from, next) => {
   NProgress.start()
   next()
-});
+}); */
 //在路由跳转后用NProgress.done()标记下结束
-router.afterEach(() => {
+/* router.afterEach(() => {
   NProgress.done()
-})
-router.beforeEach((to, from, next) => {
+}) */
+/* router.beforeEach((to, from, next) => {
   if (to.path === '/login') return next()
   const tockenstr = window.localStorage.getItem('token')
   if (!tockenstr) return next('/login')
   next()
-})
+}) */
 /* router.beforeEach((to, from, next) => {
   // to 将访问哪一个路径
   // from 代表从哪个路径跳转而来

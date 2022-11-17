@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-09-21 11:10:56
  * @LastEditors: shen-xu
- * @LastEditTime: 2022-10-28 16:46:09
+ * @LastEditTime: 2022-11-17 16:33:40
  * @Description: 
 -->
 <template>
@@ -151,6 +151,7 @@
         </div>
         <div class="table-box">
           <el-table
+            v-loading="loadings"
             id="table"
             ref="dataTabless"
             height="700"
@@ -1500,6 +1501,7 @@ export default {
   data() {
     return {
       loading: true,
+      loadings: false,
       a: true,
       b: false,
       total: 1,
@@ -1647,7 +1649,7 @@ export default {
       console.log();
     },
     goBack() {
-      console.log("go back");
+      this.$router.push("/backlog");
     },
     async getdialogList() {
       const { data: res } = await reqdialogList();
@@ -1697,8 +1699,6 @@ export default {
     },
     // 上传文件之前的钩子, 参数为上传的文件,若返回 false 或者返回 Promise 且被 reject，则停止上传
     beforeUploadFile(file) {
-      console.log("before upload");
-      console.log(file);
       let extension = file.name.substring(file.name.lastIndexOf(".") + 1);
       let size = file.size / 1024 / 1024;
       if (extension !== "xlsx" || "xls") {
@@ -1721,6 +1721,7 @@ export default {
       return "";
     },
     async uploadFile() {
+      this.loadings = true;
       if (this.fileList.length === 0) {
         this.$message.warning("请上传文件");
       } else {
@@ -1748,10 +1749,13 @@ export default {
         form.append("file", this.fileList[20]);
         form.append("date", this.value2);
         const res = await reqimportdata(form);
-
-        this.fileList = [];
-        this.$refs.upload.clearFiles();
-        this.dialogVisible = false;
+        if (res.status == 200) {
+          this.$message.success("上传成功");
+          this.loadings = false;
+          this.fileList = [];
+          this.$refs.upload.clearFiles();
+          this.dialogVisible = false;
+        }
       }
     },
     handleCheckAllChange(val) {

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-03 13:10:19
  * @LastEditors: shen-xu
- * @LastEditTime: 2022-11-11 13:53:52
+ * @LastEditTime: 2022-11-17 15:18:30
  * @Description: 
 -->
 <template>
@@ -9,9 +9,7 @@
     <el-card>
       <div style="margin-bottom:10px">
         <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item :to="{ path: '/backlog' }"
-            >首页待办</el-breadcrumb-item
-          >
+          <el-breadcrumb-item>业务核算</el-breadcrumb-item>
           <el-breadcrumb-item>WIND合约价格表</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -57,8 +55,10 @@
       <el-button type="success" style="margin-left:10px" @click="exportExcelsss"
         >文件导出</el-button
       >
-      <div class="table-box" style="margin-top:15px">
+      <div class="table-box" style="margin-top:15px; ">
         <el-table
+          height="700"
+          v-loading="loading"
           id="table"
           :data="getList"
           border
@@ -176,6 +176,7 @@ export default {
   name: "WindContractprice",
   data() {
     return {
+      loading: false,
       date: "",
       value2: "",
       value3: [],
@@ -218,12 +219,14 @@ export default {
     },
     //数据同步
     async sendDate() {
+      this.loading = true;
+      this.dialogVisible = false;
       const res = await reqWindDate(this.value2);
       if (res.status !== 200) {
         this.$message.error("数据同步失败");
       }
       this.$message.success("数据同步成功");
-      this.dialogVisible = false;
+      this.loading = false;
     },
     //导出文件
     async exportExcelsss() {

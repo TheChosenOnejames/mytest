@@ -1,16 +1,19 @@
 <!--
  * @Date: 2022-07-27 10:48:48
  * @LastEditors: shen-xu
- * @LastEditTime: 2022-11-08 14:10:32
+ * @LastEditTime: 2022-11-17 14:46:04
  * @Description: 
 -->
 <template>
   <div>
     <el-card class="box-card">
       <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item>导航三</el-breadcrumb-item>
+        <el-breadcrumb-item>银行</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path: '/bank' }"
           >银行核对</el-breadcrumb-item
+        >
+        <el-breadcrumb-item :to="{ path: '/bankfacilities' }"
+          >银行授信</el-breadcrumb-item
         >
         <el-breadcrumb-item>银行账户</el-breadcrumb-item>
       </el-breadcrumb>
@@ -2138,27 +2141,30 @@ export default {
     },
     /* 添加账户 */
     async add() {
-      await this.$confirm("此操作将添加文件, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "添加成功!"
-          });
+      this.$refs.addbankaccountRef.validate(async valid => {
+        if (!valid) return;
+        await this.$confirm("此操作将添加文件, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消添加"
+          .then(() => {
+            this.$message({
+              type: "success",
+              message: "添加成功!"
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消添加"
+            });
           });
-        });
-      await reqbankaccountadd(this.form);
-      this.$refs.addbankaccountRef.resetFields();
-      this.dialogFormVisible = false;
-      this.getbankaccount();
+        await reqbankaccountadd(this.form);
+        this.$refs.addbankaccountRef.resetFields();
+        this.dialogFormVisible = false;
+        this.getbankaccount();
+      });
     },
     /* 获取用户账户数据 */
     async getbankaccount() {
@@ -2272,31 +2278,34 @@ export default {
       return wbout;
     },
     async editUserInfo() {
-      await this.$confirm("此操作将编辑文件, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "编辑成功!"
-          });
+      this.$refs.editFormRef.validate(async validate => {
+        if (!valid) return;
+        await this.$confirm("此操作将编辑文件, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消编辑"
+          .then(() => {
+            this.$message({
+              type: "success",
+              message: "编辑成功!"
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消编辑"
+            });
           });
-        });
-      const res = await reqbankaccounteditsure(this.editid, this.editForm);
+        const res = await reqbankaccounteditsure(this.editid, this.editForm);
 
-      if (res.status !== 200) {
-        this.$message.error("更新用户信息失败!");
-      }
-      this.$message.success("更新用户信息成功!");
-      this.editDialogVisble = false;
-      this.getbankaccount();
+        if (res.status !== 200) {
+          this.$message.error("更新用户信息失败!");
+        }
+        this.$message.success("更新用户信息成功!");
+        this.editDialogVisble = false;
+        this.getbankaccount();
+      });
     },
     aditClosedbankaccount() {
       this.$refs.editFormRef.resetFields();

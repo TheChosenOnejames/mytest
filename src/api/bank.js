@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-06-28 14:12:40
  * @LastEditors: shen-xu
- * @LastEditTime: 2022-10-28 17:25:50
+ * @LastEditTime: 2022-11-14 17:34:31
  * @Description: 
  */
 /**
@@ -220,5 +220,16 @@ export const reqaddbankfacilities = (data) => {
     method: 'post',
     url: `/bank/credit-management/credit-facilities/`,
     data
+  })
+}
+
+
+export const reqbalance = (check_month) => {
+  return http({
+    method: 'get',
+    url: `/bank/balance-check/`,
+    params: {
+      check_month
+    }
   })
 }

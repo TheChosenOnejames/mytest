@@ -47,7 +47,6 @@
                 <i class="iconfont icon-gupiaoqiquan"></i>
                 期权做市</el-menu-item
               >
-
               <el-menu-item index="/gtssubaccountcloseout">
                 <i class="iconfont icon-gupiaoqiquan"></i>
                 gts子账户平仓统计</el-menu-item
@@ -89,13 +88,13 @@
           <el-submenu index="4">
             <template slot="title">
               <i class="iconfont icon-touzi"></i>
-              <span>期货账户凭证</span>
+              <span>凭证处理</span>
             </template>
             <el-menu-item-group>
               <el-menu-item index="/Gtsstatistics">
-                <i class="iconfont icon-tongji"></i>期货账户凭证</el-menu-item
+                <i class="iconfont icon-tongji"></i
+                >&nbsp期货账户凭证</el-menu-item
               >
-
               <el-menu-item index="/Gtsstatisticsshareoptions">
                 <i
                   class="iconfont icon-tongji
@@ -149,13 +148,15 @@
             </template>
             <el-menu-item-group>
               <el-menu-item index="/Regulator">
-                <i class="iconfont icon-tongji"></i>部門管理</el-menu-item
+                <i class="iconfont icon-tongji"></i>部门管理</el-menu-item
+              >
+              <el-menu-item index="/MenuList">
+                <i class="iconfont icon-tongji"></i>菜单管理</el-menu-item
               >
             </el-menu-item-group>
           </el-submenu>
         </el-menu>
       </el-aside>
-
       <el-container>
         <el-header>
           <!-- 左侧部分 -->

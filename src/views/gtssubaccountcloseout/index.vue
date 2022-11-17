@@ -2,14 +2,23 @@
   <div class="container">
     <el-card>
       <el-breadcrumb
-        style="padding-bottom:10px"
+        style="padding-bottom:15px"
         separator-class="el-icon-arrow-right"
       >
-        <el-breadcrumb-item>市盈亏</el-breadcrumb-item>
+        <el-breadcrumb-item>业务盈亏</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path: '/futuresmarket' }"
           >期货做市</el-breadcrumb-item
         >
-        <el-breadcrumb-item>期权做市</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/shareoptionmarket' }"
+          >期权做市</el-breadcrumb-item
+        >
+        <el-breadcrumb-item :to="{ path: '/gtssubaccountfloat' }"
+          >gts子账户浮动统计</el-breadcrumb-item
+        >
+        <el-breadcrumb-item :to="{ path: '/gtssubaccountsplit' }"
+          >gts子账户拆分统计</el-breadcrumb-item
+        >
+        <el-breadcrumb-item>gts子账户平仓统计</el-breadcrumb-item>
       </el-breadcrumb>
       <div class="top-box" style="margin-bottom:15px;">
         <el-date-picker
@@ -40,6 +49,7 @@
 
       <div class="table-box" style="margin-bottom:15px">
         <el-table
+          v-loading="loading"
           height="700"
           :header-cell-style="{ 'text-align': 'center' }"
           border
@@ -167,6 +177,7 @@
       </el-pagination>
       <div>
         <el-dialog
+          :append-to-body="true"
           :modal-append-to-body="false"
           title="文件zip包上传"
           :visible.sync="dialogVisible"
@@ -214,6 +225,7 @@ export default {
   name: "Gtssubaccountcloseout",
   data() {
     return {
+      loading: false,
       visible: false,
       type: "",
       limitNum: 1, // 上传excell时，同时允许上传的最大数
@@ -227,11 +239,6 @@ export default {
     };
   },
   methods: {
-    //组件方法
-    /*     init(params) {
-      this.visible = true;
-      this.type = params;
-    }, */
     // 文件超出个数限制时的钩子
     exceedFile(files, fileList) {
       this.$message.warning(
@@ -271,18 +278,15 @@ export default {
       return "";
     },
     uploadFile() {
+      this.loading = true;
+      this.dialogVisible = false;
       if (this.fileList.length === 0) {
         this.$message.warning("请上传文件");
       } else {
         //使用formdata格式传照片
         let form = new FormData();
         form.append("file", this.fileList[0]);
-        // form.append("type", this.type);
         reqgtssubaccountcloseoutupload(form).then(res => {
-          this.$nextTick(() => {
-            this.dialogVisible = false;
-          });
-          console.log(res.status, "11111111111");
           if (res.status == 200) {
             this.$message({
               message: "上传成功",
@@ -291,30 +295,11 @@ export default {
           }
           this.$refs.upload.clearFiles();
           this.fileList = [];
-          this.dialogVisible = false;
+          this.loading = false;
+          this.getgtssubaccountcloseout();
         });
-        /*        this.$axios({
-          method: "post",
-          url: "", //这里写后端的地址
-          headers: {
-            "Content-type": "multipart/form-data"
-          },
-          data: form
-        }).then(
-          res => {
-            if (res.data.code == 200) {
-              this.$message({
-                message: "上传成功",
-                type: "success"
-              });
-            }
-            this.visible = false;
-          },
-          err => {}
-        ); */
       }
     },
-
     async getgtssubaccountcloseout() {
       const [beginPubdate, endPubdate] = this.date || [];
       const res = await reqgtssubaccountcloseout(
@@ -336,7 +321,7 @@ export default {
       this.getgtssubaccountcloseout();
     }
   },
-  mounted() {
+  created() {
     this.getgtssubaccountcloseout();
   }
 };

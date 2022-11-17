@@ -1,17 +1,30 @@
 <!--
  * @Date: 2022-07-04 09:33:36
  * @LastEditors: shen-xu
- * @LastEditTime: 2022-10-18 10:10:07
+ * @LastEditTime: 2022-11-17 14:47:41
  * @Description: 
 -->
 <template>
   <div>
     <el-card class="box-card">
       <div style="padding-bottom:15px">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item>市盈亏</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: '/shareoptionmaket' }"
+        <el-breadcrumb
+          style="padding-bottom:15px"
+          separator-class="el-icon-arrow-right"
+        >
+          <el-breadcrumb-item>业务盈亏</el-breadcrumb-item>
+
+          <el-breadcrumb-item :to="{ path: '/shareoptionmarket' }"
             >期权做市</el-breadcrumb-item
+          >
+          <el-breadcrumb-item :to="{ path: '/gtssubaccountcloseout' }"
+            >gts子账户平仓统计</el-breadcrumb-item
+          >
+          <el-breadcrumb-item :to="{ path: '/gtssubaccountfloat' }"
+            >gts子账户浮动统计</el-breadcrumb-item
+          >
+          <el-breadcrumb-item :to="{ path: '/gtssubaccountsplit' }"
+            >gts子账户拆分统计</el-breadcrumb-item
           >
           <el-breadcrumb-item>期货做市</el-breadcrumb-item>
         </el-breadcrumb>

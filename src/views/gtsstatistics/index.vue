@@ -1,15 +1,16 @@
 <!--
  * @Date: 2022-09-08 10:30:31
  * @LastEditors: shen-xu
- * @LastEditTime: 2022-11-04 10:39:59
+ * @LastEditTime: 2022-11-17 15:50:27
  * @Description: 
 -->
 <template>
   <el-card class="box-card">
     <div style="margin-bottom:15px">
       <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item :to="{ path: '/backlog' }"
-          >首页待办</el-breadcrumb-item
+        <el-breadcrumb-item>凭证处理</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/Gtsstatisticsshareoptions' }"
+          >期货账户凭证(期权)</el-breadcrumb-item
         >
         <el-breadcrumb-item>期货账户凭证</el-breadcrumb-item>
       </el-breadcrumb>
@@ -57,13 +58,6 @@
             @click="searchList"
             circle
           ></el-button>
-          <!--           <el-button
-            circle
-            style="margin-left:5px"
-            type="primary"
-            @click="searchList"
-            >查询数据</el-button
-          > -->
           <el-button
             type="success"
             slot="reference"
@@ -110,8 +104,12 @@
     </div>
     <div class="table-box" style="margin-bottom:15px">
       <el-table
+        height="700"
+        v-loading="loading"
         id="table"
         :header-cell-style="{ 'text-align': 'center' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '0px' }"
         border
         center
         :data="gettableList"
@@ -136,9 +134,16 @@
           width="180"
         >
         </el-table-column>
-        <el-table-column align="center" sortable prop="date" label="日期">
+        <el-table-column
+          width="150"
+          align="center"
+          sortable
+          prop="date"
+          label="日期"
+        >
         </el-table-column>
         <el-table-column
+          width="200"
           align="center"
           sortable
           prop="number_date"
@@ -146,15 +151,23 @@
         >
         </el-table-column>
         <el-table-column
+          width="200"
           align="right"
           sortable
           prop="settlement_profit_by_trade"
           label="逐笔平仓盈亏"
         >
         </el-table-column>
-        <el-table-column align="right" sortable prop="fees" label="交易手续费">
+        <el-table-column
+          width="200"
+          align="right"
+          sortable
+          prop="fees"
+          label="交易手续费"
+        >
         </el-table-column>
         <el-table-column
+          width="200"
           align="right"
           sortable
           prop="floating_profit_by_trade"
@@ -162,6 +175,7 @@
         >
         </el-table-column>
         <el-table-column
+          width="200"
           align="right"
           sortable
           prop="client_equity"
@@ -169,6 +183,7 @@
         >
         </el-table-column>
         <el-table-column
+          width="200"
           align="right"
           sortable
           prop="margin"
@@ -176,6 +191,7 @@
         >
         </el-table-column>
         <el-table-column
+          width="200"
           align="right"
           sortable
           prop="available_fund"
@@ -183,6 +199,7 @@
         >
         </el-table-column>
         <el-table-column
+          width="200"
           align="right"
           sortable
           prop="opening_fund_balance"
@@ -190,6 +207,7 @@
         >
         </el-table-column>
         <el-table-column
+          width="200"
           align="right"
           sortable
           prop="closing_fund_balance"
@@ -225,6 +243,7 @@ export default {
   name: "Gtsstatistics",
   data() {
     return {
+      loading: false,
       total: 1,
       size: 15,
       currentPage2: 1,
@@ -349,6 +368,7 @@ export default {
       return "";
     },
     uploadFile() {
+      this.loading = false;
       if (this.fileList.length === 0) {
         this.$message.warning("请上传文件");
       } else {
@@ -374,6 +394,7 @@ export default {
         form.append("file", this.fileList[18]);
         form.append("file", this.fileList[19]);
         form.append("file", this.fileList[20]);
+        this.loading = true;
         reqGts(form).then(res => {
           this.messageList = res.data.data;
           let bb = this.messageList.map(x => {
@@ -385,8 +406,9 @@ export default {
               message: "上传成功",
               type: "success"
             });
-
+            this.loading = false;
             this.$refs.upload.clearFiles();
+            this.getList();
           } else if (res.data.status == 201) {
             this.$notify({
               title: "导入数据部分重复",

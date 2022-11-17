@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-06-08 08:55:57
  * @LastEditors: shen-xu
- * @LastEditTime: 2022-11-11 09:44:33
+ * @LastEditTime: 2022-11-17 15:28:05
  * @Description: 
  */
 // 这个模块, 对于axios进行二次封装, 可以方便的进行自定义axios
@@ -12,14 +12,14 @@ import ElementUI from 'element-ui';
 const http = axios.create({
   baseURL: 'http://10.66.128.87:8000/', // 基础地址
   // baseURL: 'http://172.16.1.89:8000/',
-  timeout: 80000, // 配置请求等待延时
+  timeout: 90000, // 配置请求等待延时
   /*   headers: {
       "Content-type": "multipart/form-data"
     }, */
 })
-http.defaults.headers = {
+/* http.defaults.headers = {
   'Content-Type': 'application/json;'
-}
+} */
 // http request 拦截器 添加一个请求拦截器
 /* http.interceptors.request.use((config) => {
   // config 是 axios 配置对象

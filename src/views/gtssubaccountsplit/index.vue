@@ -1,21 +1,32 @@
 <!--
  * @Date: 2022-10-20 10:59:09
  * @LastEditors: shen-xu
- * @LastEditTime: 2022-10-26 16:16:47
+ * @LastEditTime: 2022-11-17 14:26:15
  * @Description: 
 -->
 <template>
   <div class="container">
     <el-card class="box-card">
       <el-breadcrumb
-        style="padding-bottom:10px"
+        style="padding-bottom:15px"
         separator-class="el-icon-arrow-right"
       >
-        <el-breadcrumb-item>市盈亏</el-breadcrumb-item>
+        <el-breadcrumb-item>业务盈亏</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path: '/futuresmarket' }"
           >期货做市</el-breadcrumb-item
         >
-        <el-breadcrumb-item>期权做市</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/shareoptionmarket' }"
+          >期权做市</el-breadcrumb-item
+        >
+        <el-breadcrumb-item :to="{ path: '/gtssubaccountcloseout' }"
+          >gts子账户平仓统计</el-breadcrumb-item
+        >
+        <el-breadcrumb-item :to="{ path: '/gtssubaccountfloat' }"
+          >gts子账户浮动统计</el-breadcrumb-item
+        >
+        <el-breadcrumb-item :to="{ path: '/gtssubaccountsplit' }"
+          >gts子账户拆分统计</el-breadcrumb-item
+        >
       </el-breadcrumb>
       <div class="top-box">
         <el-date-picker
@@ -38,6 +49,7 @@
         <el-button type="success" @click="fileExport">文件导出</el-button>
       </div>
       <el-table
+        height="700"
         :header-cell-style="{
           'text-align': 'center',
           height: '20px',

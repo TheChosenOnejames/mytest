@@ -1,19 +1,28 @@
 <!--
  * @Date: 2022-07-19 09:03:22
  * @LastEditors: shen-xu
- * @LastEditTime: 2022-09-21 16:10:29
+ * @LastEditTime: 2022-11-17 14:48:18
  * @Description: 
 -->
 <template>
   <div class="container">
     <el-card class="card-box">
       <el-breadcrumb
-        style="padding-bottom:10px"
+        style="padding-bottom:15px"
         separator-class="el-icon-arrow-right"
       >
-        <el-breadcrumb-item>市盈亏</el-breadcrumb-item>
+        <el-breadcrumb-item>业务盈亏</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path: '/futuresmarket' }"
           >期货做市</el-breadcrumb-item
+        >
+        <el-breadcrumb-item :to="{ path: '/gtssubaccountcloseout' }"
+          >gts子账户平仓统计</el-breadcrumb-item
+        >
+        <el-breadcrumb-item :to="{ path: '/gtssubaccountfloat' }"
+          >gts子账户浮动统计</el-breadcrumb-item
+        >
+        <el-breadcrumb-item :to="{ path: '/gtssubaccountsplit' }"
+          >gts子账户拆分统计</el-breadcrumb-item
         >
         <el-breadcrumb-item>期权做市</el-breadcrumb-item>
       </el-breadcrumb>
@@ -46,7 +55,12 @@
           >
           </el-option>
         </el-select>
-        <el-button type="primary" @click="getOptionsList">点击查询</el-button>
+        <el-button
+          style="margin-left:10px"
+          type="primary"
+          @click="getOptionsList"
+          >查询</el-button
+        >
       </div>
       <h1 style="padding-bottom:30px;text-align: center;">
         期权做市盈亏数据表（单位：元）

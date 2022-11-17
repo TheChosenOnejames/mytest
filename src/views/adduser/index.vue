@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-01 09:11:16
  * @LastEditors: shen-xu
- * @LastEditTime: 2022-11-09 10:45:16
+ * @LastEditTime: 2022-11-16 17:48:14
  * @Description: 
 -->
 <template>
@@ -86,8 +86,9 @@
         width="50%"
       >
         <el-form
+          ref="editFormLabelAlignRef"
           label-width="100px"
-          :rules="ruless"
+          :rules="rules"
           :model="editFormLabelAlign"
         >
           <el-form-item label="管理员账号" prop="username">
@@ -148,7 +149,12 @@
         :visible.sync="dialogVisible"
         width="40%"
       >
-        <el-form label-width="100px" :rules="rules" :model="formLabelAlign">
+        <el-form
+          ref="formLabelAlignRef"
+          label-width="100px"
+          :rules="rules"
+          :model="formLabelAlign"
+        >
           <el-form-item label="管理员账号" prop="username">
             <el-input v-model="formLabelAlign.username"></el-input>
           </el-form-item>
@@ -279,13 +285,16 @@ export default {
   },
   methods: {
     async editUser() {
-      const res = await reqEdit(this.editId, this.editFormLabelAlign);
-      console.log(res.status, "uuu112");
-      if (res.status !== 200) {
-        this.$message.error("修改失败");
-      }
-      this.$message.success("修改成功");
-      this.dialogEditFormVisible = false;
+      this.$refs.editFormLabelAlignRef.validate(async valid => {
+        if (!valid) return;
+        const res = await reqEdit(this.editId, this.editFormLabelAlign);
+        console.log(res.status, "uuu112");
+        if (res.status !== 200) {
+          this.$message.error("修改失败");
+        }
+        this.$message.success("修改成功");
+        this.dialogEditFormVisible = false;
+      });
     },
     showEditDialog(row) {
       console.log(row, "333///22");
@@ -340,14 +349,16 @@ export default {
       console.log(this.deptList, "deptList");
     },
     async addUser() {
-      const res = await reqAddform(this.formLabelAlign);
-      if (res.status !== 200) {
-        this.$message.error("添加失败");
-      }
-      this.$message.success("添加成功");
-      this.dialogVisible = false;
-      this.getuser();
-      this.formLabelAlign = [];
+      this.$refs.formLabelAlignRef.validate(async valid => {
+        if (!valid) return;
+        const res = await reqAddform(this.formLabelAlign);
+        if (res.status !== 200) {
+          this.$message.error("添加失败");
+        }
+        this.$message.success("添加成功");
+        this.dialogVisible = false;
+        this.getuser();
+      });
     }
   },
   created() {

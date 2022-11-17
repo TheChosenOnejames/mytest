@@ -15,7 +15,7 @@
           v-model="form.name" 和form中的某个属性双向绑定
       -->
       <el-form ref="form" class="login-form" :model="form" :rules="rules">
-        <h2 class="title">綜合財務管理平台</h2>
+        <h2 class="title">综合财务管理平台</h2>
         <el-form-item prop="mobile">
           <el-input placeholder="请输入账号" v-model="form.mobile"></el-input>
         </el-form-item>
@@ -94,15 +94,14 @@ export default {
   },
   methods: {
     login() {
-      //this.$router.push("/backlog");
-      // this.$router.push("/backlog");
+      this.$router.push("/backlog");
       // console.log(this.$refs.logoref)
       // console.log(this.$refs.form)
       // 要先拿到el-form组件, 调用内部的校验方法, 进行校验
       // 校验通过, 才发送ajax请求
-      this.$refs.form.validate(flag => {
+      /*       this.$refs.form.validate(flag => {
         this.$router.push("/backlog");
-        /*         if (flag) {
+        if (flag) {
           // 通过校验了, 才发送ajax请求了, 登录请求
           reqUserLogin(this.form.mobile, this.form.code).then(res => {
             console.log(res, "res1111");
@@ -114,8 +113,8 @@ export default {
             window.localStorage.setItem("token", JSON.stringify(token));
             this.$router.push("/backlog");
           });
-        } */
-      });
+        }
+      }); */
     }
   }
 };

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-01 09:11:16
  * @LastEditors: shen-xu
- * @LastEditTime: 2022-11-11 09:57:15
+ * @LastEditTime: 2022-11-16 17:42:55
  * @Description: 
 -->
 <template>
@@ -93,8 +93,9 @@
         width="50%"
       >
         <el-form
+          ref="editFormLabelAlignRef"
           label-width="100px"
-          :rules="ruless"
+          :rules="addFormRules"
           :model="editFormLabelAlign"
         >
           <el-form-item label="管理员账号" prop="username">
@@ -156,9 +157,9 @@
         width="40%"
       >
         <el-form
-          ref="form"
+          ref="formLabelAlignRef"
           label-width="100px"
-          :rules="rules"
+          :rules="addFormRules"
           :model="formLabelAlign"
         >
           <el-form-item label="管理员账号" prop="username">
@@ -210,7 +211,7 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addUser">确 定</el-button>
+          <el-button type="primary" @click="addUser()">确 定</el-button>
         </span>
       </el-dialog>
       <el-pagination
@@ -271,7 +272,7 @@ export default {
       },
       roleList: [],
       getRole: [],
-      rules: {
+      addFormRules: {
         username: [{ required: true, message: "请输入账号", trigger: "blur" }],
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         password: [
@@ -280,8 +281,8 @@ export default {
         ],
         dept: [{ required: true, message: "请输入部门", trigger: "blur" }],
         role: [{ required: true, message: "请输入角色", trigger: "blur" }]
-      },
-      ruless: {
+      }
+      /*       ruless: {
         username: [{ required: true, message: "请输入账号", trigger: "blur" }],
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         password: [
@@ -290,7 +291,7 @@ export default {
         ],
         dept: [{ required: true, message: "请输入部门", trigger: "blur" }],
         role: [{ required: true, message: "请输入角色", trigger: "blur" }]
-      }
+      } */
     };
   },
   methods: {
@@ -312,13 +313,16 @@ export default {
       });
     },
     async editUser() {
-      const res = await reqEdit(this.editId, this.editFormLabelAlign);
-      console.log(res.status, "uuu112");
-      if (res.status !== 200) {
-        this.$message.error("修改失败");
-      }
-      this.$message.success("修改成功");
-      this.dialogEditFormVisible = false;
+      this.$refs.editFormLabelAlignRef.validate(async valide => {
+        if (!valide) return;
+        const res = await reqEdit(this.editId, this.editFormLabelAlign);
+        console.log(res.status, "uuu112");
+        if (res.status !== 200) {
+          this.$message.error("修改失败");
+        }
+        this.$message.success("修改成功");
+        this.dialogEditFormVisible = false;
+      });
     },
     showEditDialog(row) {
       this.editId = row.id;
@@ -369,14 +373,17 @@ export default {
       this.deptList = res.data.results;
     },
     async addUser() {
-      const res = await reqAddforms(this.formLabelAlign);
-      if (res.status !== 200) {
-        this.$message.error("添加失败");
-      }
-      this.$message.success("添加成功");
-      this.getuser();
-      this.dialogVisible = false;
-      this.$refs["form"].resetFields();
+      this.$refs.formLabelAlignRef.validate(async valide => {
+        if (!valide) return;
+        const res = await reqAddforms(this.formLabelAlign);
+        if (res.status !== 200) {
+          this.$message.error("添加失败");
+        }
+        this.$message.success("添加成功");
+        this.getuser();
+        this.dialogVisible = false;
+        this.$refs["formLabelAlignRef"].resetFields();
+      });
     }
   },
   created() {

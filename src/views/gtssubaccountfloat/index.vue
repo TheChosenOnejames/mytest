@@ -1,21 +1,31 @@
 <!--
  * @Date: 2022-10-20 10:53:05
  * @LastEditors: shen-xu
- * @LastEditTime: 2022-10-26 09:34:51
+ * @LastEditTime: 2022-11-17 15:29:07
  * @Description: 
 -->
 <template>
   <div class="container">
     <el-card>
       <el-breadcrumb
-        style="padding-bottom:10px"
+        style="padding-bottom:15px"
         separator-class="el-icon-arrow-right"
       >
-        <el-breadcrumb-item>市盈亏</el-breadcrumb-item>
+        <el-breadcrumb-item>业务盈亏</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path: '/futuresmarket' }"
           >期货做市</el-breadcrumb-item
         >
-        <el-breadcrumb-item>期权做市</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/shareoptionmarket' }"
+          >期权做市</el-breadcrumb-item
+        >
+        <el-breadcrumb-item :to="{ path: '/gtssubaccountcloseout' }"
+          >gts子账户平仓统计</el-breadcrumb-item
+        >
+
+        <el-breadcrumb-item :to="{ path: '/gtssubaccountsplit' }"
+          >gts子账户拆分统计</el-breadcrumb-item
+        >
+        <el-breadcrumb-item>gts子账户浮动统计</el-breadcrumb-item>
       </el-breadcrumb>
       <div class="top-box" style="margin-bottom:15px;">
         <el-date-picker
@@ -40,6 +50,8 @@
       </div>
       <div class="table-box" style="margin-bottom:15px">
         <el-table
+          height="700"
+          v-loading="loading"
           :header-cell-style="{
             'text-align': 'center',
             height: '20px',
@@ -116,6 +128,7 @@
           >
           </el-table-column>
           <el-table-column
+            width="100"
             align="center"
             sortable
             prop="direction"
@@ -123,13 +136,15 @@
           >
           </el-table-column>
           <el-table-column
-            width="150"
+            align="center"
+            width="230"
             sortable
             prop="hedge_flag"
             label="投保标志"
           >
           </el-table-column>
           <el-table-column
+            width="100"
             align="center"
             sortable
             prop="previous_holding_amount"
@@ -137,6 +152,7 @@
           >
           </el-table-column>
           <el-table-column
+            width="100"
             align="center"
             sortable
             prop="current_holding_amount"
@@ -222,6 +238,7 @@
           >
           </el-table-column>
           <el-table-column
+            width="100"
             align="center"
             show-overflow-tooltip
             sortable
@@ -229,7 +246,13 @@
             label="部门"
           >
           </el-table-column>
-          <el-table-column align="center" sortable prop="project" label="项目">
+          <el-table-column
+            width="100"
+            align="center"
+            sortable
+            prop="project"
+            label="项目"
+          >
           </el-table-column>
           <el-table-column
             align="center"
@@ -288,7 +311,7 @@
       <div>
         <el-dialog
           :modal-append-to-body="false"
-          title="文件zip包上传"
+          title="文件excel上传"
           :visible.sync="dialogVisible"
           width="40%"
         >
@@ -311,7 +334,7 @@
               将文件拖到此处，或<em>点击上传</em>
             </div>
             <div class="el-upload__tip" slot="tip">
-              只能上传zip文件，且不超过10M
+              只能上传excel文件，且不超过10M
             </div>
           </el-upload>
           <br />
@@ -334,6 +357,7 @@ export default {
   name: "Gtssubaccountfloat",
   data() {
     return {
+      loading: false,
       visible: false,
       type: "",
       limitNum: 1, // 上传excell时，同时允许上传的最大数
@@ -360,8 +384,6 @@ export default {
     },
     // 上传文件之前的钩子, 参数为上传的文件,若返回 false 或者返回 Promise 且被 reject，则停止上传
     beforeUploadFile(file) {
-      console.log("before upload");
-      console.log(file);
       let extension = file.name.substring(file.name.lastIndexOf(".") + 1);
       let size = file.size / 1024 / 1024;
       if (extension !== "xlsx" || "xls") {
@@ -384,50 +406,27 @@ export default {
       return "";
     },
     uploadFile() {
+      this.loading = true;
+      this.dialogVisible = false;
       if (this.fileList.length === 0) {
         this.$message.warning("请上传文件");
       } else {
-        //使用formdata格式传照片
         let form = new FormData();
         form.append("file", this.fileList[0]);
-        // form.append("type", this.type);
         reqgtssubaccountfloatUpload(form).then(res => {
-          this.$nextTick(() => {
-            this.dialogVisible = false;
-          });
-          console.log(res.status, "11111111111");
           if (res.status == 200) {
             this.$message({
               message: "上传成功",
               type: "success"
             });
+            this.loading = false;
+            this.$refs.upload.clearFiles();
+            this.fileList = [];
+            this.getgtssubaccountfloat();
           }
-          this.$refs.upload.clearFiles();
-          this.fileList = [];
-          this.dialogVisible = false;
         });
-        /*        this.$axios({
-          method: "post",
-          url: "", //这里写后端的地址
-          headers: {
-            "Content-type": "multipart/form-data"
-          },
-          data: form
-        }).then(
-          res => {
-            if (res.data.code == 200) {
-              this.$message({
-                message: "上传成功",
-                type: "success"
-              });
-            }
-            this.visible = false;
-          },
-          err => {}
-        ); */
       }
     },
-
     handleSizeChange(newSize) {
       this.size = newSize;
       console.log(newSize);
@@ -449,7 +448,6 @@ export default {
       console.log(res.data.count, "ppppp");
       this.getgtssubaccountfloatList = res.data.results;
       this.total = res.data.count;
-      console.log(res.data.results);
     }
   },
   created() {

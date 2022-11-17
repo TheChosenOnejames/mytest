@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-06-27 10:56:19
  * @LastEditors: shen-xu
- * @LastEditTime: 2022-10-28 18:10:36
+ * @LastEditTime: 2022-11-17 14:43:39
  * @Description: 银行核对
 -->
 <template>
@@ -9,14 +9,16 @@
     <el-card class="box-card">
       <div>
         <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item :to="{ path: '/backlog' }"
-            >首页待办</el-breadcrumb-item
+          <el-breadcrumb-item>银行</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/bankaccount' }"
+            >银行账户</el-breadcrumb-item
           >
-          <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-          <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/bankfacilities' }"
+            >银行授信</el-breadcrumb-item
+          >
+          <el-breadcrumb-item>银行核对</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
-
       <div class="left-box" v-if="a">
         <el-select
           style="width:350px"
@@ -45,10 +47,16 @@
         >
         <el-button
           style="margin-left:10px"
+          type="success"
+          @click="dialogVisiblesss = true"
+          >余额核对</el-button
+        >
+        <!--         <el-button
+          style="margin-left:10px"
           @click="dialogVisible = true"
           type="info"
           >导入文件</el-button
-        >
+        > -->
         <div class="tableheader">
           <h1 style="font-size: 25px;">银行流水明细表</h1>
         </div>
@@ -64,15 +72,20 @@
           >
           </el-date-picker>
           <el-button
+            style="margin-left:10px"
+            @click="dialogVisible = true"
+            type="info"
+            >导入文件</el-button
+          >
+          <el-button
             v-show="num === 1"
             type="success"
             style="margin-left:10px"
             @click="dialogVisibles = true"
-            >变动检查</el-button
+            >明细核对</el-button
           >
         </div>
       </div>
-
       <div class="on-box" v-if="a">
         <el-table
           height="700"
@@ -126,19 +139,14 @@
         </el-pagination>
       </div>
       <div class="in-box" v-if="b" style="margin-top:15px">
-        <div class="toexcel">
-          <el-button
-            style="margin-bottom:15px"
-            type="info"
-            plain
-            @click="exportExcel"
-            >导出文件</el-button
-          >
-          <el-button type="info" @click="dialogVisibles = true"
-            >点击打开 Dialog</el-button
-          >
-        </div>
-
+        <div class="el-icon-back " @click="backrecon">返回</div>
+        <el-button
+          size="mini"
+          style="margin-bottom:10px;margin-top:10px;margin-left:10px"
+          type="info"
+          @click="exportExcel"
+          >导出文件</el-button
+        >
         <el-table
           :header-cell-style="{ 'text-align': 'center' }"
           class="table"
@@ -156,7 +164,6 @@
             width="200"
           >
           </el-table-column>
-
           <el-table-column
             align="center"
             prop="recon_date"
@@ -210,7 +217,92 @@
           </el-table-column>
         </el-table>
       </div>
-
+      <div class="balance_box" v-if="c" style="margin-top:10px">
+        <span
+          style="margin-bottom:10px;margin-right:10px"
+          class="el-icon-back "
+          @click="backList"
+          >返回</span
+        >
+        <el-button
+          size="mini"
+          style="margin-bottom:10px;margin-top:10px"
+          type="info"
+          @click="exportExcels"
+          >导出文件</el-button
+        >
+        <el-table
+          class="tabless"
+          border
+          :header-cell-style="{ 'text-align': 'center' }"
+          :data="balanceList"
+          style="width: 100%"
+        >
+          <el-table-column
+            align="center"
+            sortable
+            prop="check_month"
+            label="核对月份"
+            width="180"
+          >
+          </el-table-column>
+          <el-table-column
+            align="center"
+            sortable
+            prop="bank_abbr_code"
+            label="银行简称"
+            width="180"
+          >
+          </el-table-column>
+          <el-table-column
+            align="center"
+            sortable
+            prop="bank_acc_number"
+            label="银行账号"
+          >
+          </el-table-column>
+          <el-table-column
+            align="right"
+            sortable
+            prop="ending_bal"
+            label="银行余额"
+          >
+          </el-table-column>
+          <el-table-column
+            align="right"
+            sortable
+            prop="nc_bal"
+            label="用友余额"
+          >
+          </el-table-column>
+          <el-table-column
+            align="right"
+            sortable
+            prop="bal_dif"
+            label="余额差异"
+          >
+          </el-table-column>
+        </el-table>
+      </div>
+      <el-dialog
+        append-to-body
+        title="余额核对"
+        :visible.sync="dialogVisiblesss"
+        width="30%"
+      >
+        <el-date-picker
+          v-model="balance"
+          format="yyyy 年 MM 月 dd 日"
+          value-format="yyyy-MM-dd"
+          type="date"
+          placeholder="选择日期"
+        >
+        </el-date-picker>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisiblesss = false">取 消</el-button>
+          <el-button type="primary" @click="sureBalance">确 定</el-button>
+        </span>
+      </el-dialog>
       <el-dialog
         :modal-append-to-body="false"
         title="上传文件"
@@ -252,7 +344,7 @@
         <el-button size="small" @click="dialogVisible = false">取消</el-button>
       </el-dialog>
       <el-dialog
-        title="变动检查"
+        title="明细核对"
         :modal-append-to-body="false"
         :visible.sync="dialogVisibles"
         width="40%"
@@ -303,13 +395,16 @@
 import FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import { reqbanupload } from "../../api/banupload";
-import { reqBanfilter, reqBandata } from "../../api/bank.js";
+import { reqBanfilter, reqBandata, reqbalance } from "../../api/bank.js";
 export default {
   name: "Bank",
   data() {
     return {
+      balanceList: [],
+      balance: "",
       recon_result_List: [],
       dialogVisible: false,
+      dialogVisiblesss: false,
       selectvalue: [],
       selectvalue2: [],
       dialogVisibles: false,
@@ -319,6 +414,7 @@ export default {
       date: [],
       a: true,
       b: false,
+      c: false,
       getbanlList: [],
       selectbank: [],
       value: "",
@@ -339,6 +435,27 @@ export default {
     };
   },
   methods: {
+    backrecon() {
+      this.a = true;
+      this.b = false;
+      this.c = false;
+    },
+    backList() {
+      this.a = true;
+      this.b = false;
+      this.c = false;
+    },
+    async sureBalance() {
+      const res = await reqbalance(this.balance);
+      if (res.status == 200) {
+        this.$message.success("成功获取余额数据");
+      }
+      this.dialogVisiblesss = false;
+      this.a = false;
+      this.b = false;
+      this.c = true;
+      this.balanceList = res.data.check_result;
+    },
     fn() {
       this.a = false;
       this.b = true;
@@ -354,9 +471,7 @@ export default {
       this.getBankgetList();
     },
     async getBankgetList(num) {
-      console.log("点击率");
       this.num = num;
-      // this.isShow = !this.isShow;
       const [beginPubdate, endPubdate] = this.date || [];
       const { data: res } = await reqBanfilter(
         this.currentPage2,
@@ -365,20 +480,15 @@ export default {
         beginPubdate,
         endPubdate
       );
-
       if (res.status !== 200) {
         this.$message.error("获取列表失败!");
       }
       this.$message.success("获取列表成功");
-      console.log(res.results);
       this.selectbank = res.results.bank_list;
-      console.log(this.selectbank, "hhhhhhhhhhhhhhhhh");
       this.getbanlList = res.results.data;
       this.total = res.count;
       this.bankcheck = res.results.recon_result;
-      /* this.List = res.results.compare_list; */
       this.List = res.results.compare_list;
-      console.log(this.ww, "hhhjjj");
       if (this.ww == 0) {
         this.qw = res.results.compare_list[0].secondary_list;
       } else {
@@ -391,7 +501,6 @@ export default {
       this.latest_data_copy = res.results.latest_data_copy;
       /*   console.log(this.latest_date, "hhhhhhh"); */
       let jj = this.List;
-
       console.log(res.results.compare_list, "银行对账月份");
     },
     async inspectdata() {
@@ -403,32 +512,58 @@ export default {
       this.dialogVisibles = false;
       this.b = true;
       this.a = false;
-      console.log(res, "qwert");
     },
     testSelect() {
       console.log(this.selectvalue);
       let ok = this.selectvalue;
       this.selectvalue - 1;
       this.ok = ok.flat();
-      console.log(this.selectvalue, "yyyyy");
-      console.log(this.List.secondary_list);
-      console.log(this.List, "mmmmmmmm");
       let ee = this.List.map(x => {
         return x.secondary_list;
       });
       this.ee = ee.flat();
-      console.log(ee, "qqqqq");
-      console.log();
     },
     addobj(val) {
       this.addbank = val;
+    },
+    exportExcels() {
+      let time = new Date();
+      let year = time.getFullYear();
+      let month = time.getMonth() + 1;
+      let day = time.getDate();
+      let name = year + "" + month + "" + day;
+      var xlsxParam = { raw: true }; // 导出的内容只做解析，不进行格式转换
+      var wb = XLSX.utils.table_to_book(
+        document.querySelector(".tabless"),
+        xlsxParam
+      );
+
+      /* get binary string as output */
+      var wbout = XLSX.write(wb, {
+        bookType: "xlsx",
+        bookSST: true,
+        type: "array"
+      });
+      try {
+        FileSaver.saveAs(
+          new Blob([wbout], { type: "application/octet-stream" }),
+          name + "余额核对.xlsx"
+        );
+      } catch (e) {
+        if (typeof console !== "undefined") {
+          console.log(e, wbout);
+        }
+      }
+      return wbout;
     },
     exportExcel() {
       let time = new Date();
       let year = time.getFullYear();
       let month = time.getMonth() + 1;
       let day = time.getDate();
-      let name = year + "" + month + "" + day;
+      let detail = "明细核对";
+      let name = year + "" + month + "" + day + detail;
+
       // console.log(name)
       /* generate workbook object from table */
       //  .table要导出的是哪一个表格
@@ -494,7 +629,6 @@ export default {
       } else {
         let form = new FormData();
         form.append("file", this.fileList[0]);
-
         form.append("date", this.value2);
         /*         const res = reqimportdata(form);
         console.log(res); */

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-08 15:09:46
  * @LastEditors: shen-xu
- * @LastEditTime: 2022-11-10 09:54:16
+ * @LastEditTime: 2022-11-16 18:11:06
  * @Description: 
 -->
 <template>
@@ -109,7 +109,7 @@
       width="40%"
     >
       <el-form
-        ref="form"
+        ref="formLabelAlignRef"
         label-width="100px"
         :rules="rules"
         :model="formLabelAlign"
@@ -214,7 +214,10 @@ export default {
       options: [],
       editId: "",
       rules: {
-        name: [{ required: true, message: "请输入部门名称", trigger: "blur" }]
+        name: [{ required: true, message: "请输入部门名称", trigger: "blur" }],
+        parent: [
+          { required: true, message: "请输入父级部门名称", trigger: "blur" }
+        ]
       },
       editFormLabelAlign: {
         parent: "",
@@ -241,14 +244,17 @@ export default {
   },
   methods: {
     async addUsers() {
-      const res = await reqregulatorAdd(this.formLabelAlign);
-      if (res.status !== 200) {
-        this.$message.error("添加失败");
-      }
-      this.$message.success("添加成功");
-      this.dialogVisible = false;
-      this.$refs["form"].resetFields();
-      console.log(res, "res");
+      this.$refs.formLabelAlignRef.validate(async valid => {
+        if (!valid) return;
+        const res = await reqregulatorAdd(this.formLabelAlign);
+        if (res.status !== 200) {
+          this.$message.error("添加失败");
+        }
+        this.$message.success("添加成功");
+        this.dialogVisible = false;
+        this.$refs["form"].resetFields();
+        console.log(res, "res");
+      });
     },
     handleChange(value) {
       if (value != "") {

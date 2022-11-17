@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-10-26 16:25:08
  * @LastEditors: shen-xu
- * @LastEditTime: 2022-11-04 11:27:23
+ * @LastEditTime: 2022-11-17 15:56:03
  * @Description: 
 -->
 <template>
@@ -9,10 +9,11 @@
     <el-card>
       <div style="margin-bottom:15px">
         <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item :to="{ path: '/backlog' }"
-            >首页待办</el-breadcrumb-item
+          <el-breadcrumb-item>凭证处理</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/Gtsstatistics' }"
+            >期货账户凭证</el-breadcrumb-item
           >
-          <el-breadcrumb-item>期货账户凭证</el-breadcrumb-item>
+          <el-breadcrumb-item>期货账户凭证(期权)</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div class="top-box">
@@ -88,6 +89,8 @@
         <el-button @click="dialogVisible = false">取 消</el-button>
       </el-dialog>
       <el-table
+        v-loading="loading"
+        height="700"
         border
         :header-cell-style="{ 'text-align': 'center' }"
         :data="getList"
@@ -287,7 +290,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page.sync="currentPage2"
-        :page-sizes="[50, 100, 150, 200]"
+        :page-sizes="[15, 25, 35, 50]"
         :page-size="size"
         layout="total, sizes, prev, pager, next"
         :total="total"
@@ -308,6 +311,7 @@ export default {
   name: "Gtsstatisticsshareoptions",
   data() {
     return {
+      loading: false,
       value2: [],
       account_code_list: [],
       currentPage2: 1,
@@ -364,6 +368,8 @@ export default {
       return "";
     },
     uploadFile() {
+      this.loading = true;
+      this.dialogVisible = false;
       if (this.fileList.length === 0) {
         this.$message.warning("请上传文件");
       } else {
@@ -373,9 +379,6 @@ export default {
         console.log(form, "jjjjjj");
         // form.append("type", this.type);
         reqgtsstatisticsshareoptionsUpload(form).then(res => {
-          this.$nextTick(() => {
-            this.dialogVisible = false;
-          });
           console.log(res.status, "11111111111");
           if (res.status == 200) {
             this.$message({
@@ -385,7 +388,8 @@ export default {
           }
           this.$refs.upload.clearFiles();
           this.fileList = [];
-          this.dialogVisible = false;
+          this.loading = false;
+          this.getgtsstatisticsshareoptionsList();
         });
         /*        this.$axios({
           method: "post",
